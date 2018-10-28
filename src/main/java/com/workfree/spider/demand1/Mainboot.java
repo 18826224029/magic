@@ -30,7 +30,7 @@ public class Mainboot {
         }
         System.out.println("开始爬了哦");
         for(String keyword:keywords){
-            Amazonurl amazonurl=new Amazonurl(keyword);
+            Amazonurl amazonurl=new Amazonurl(keyword,args[1]);
             amazonurl.run();
         }
 

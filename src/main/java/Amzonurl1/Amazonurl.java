@@ -9,20 +9,26 @@ import us.codecraft.webmagic.selector.Selectable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Amazonurl implements PageProcessor {
 
-    private Site site = Site.me().setRetryTimes(3).setSleepTime(3000);
+    private Site site = Site.me().setRetryTimes(1).setSleepTime(3000);
 
     Set<String> pageNumSet = new HashSet<String>();
 
-    private   static String keyWord ;
+    private String keyWord ;
 
-    public Amazonurl(String keyWord) {
+    int pagescrape=10;
+
+    public Amazonurl(String keyWord,String pageNum) {
         this.keyWord = keyWord;
+        pagescrape = Integer.parseInt(pageNum);
     }
 
     public void process(Page page) {
+        page.putField("keyword",keyWord);
         List<Map> rows =new ArrayList<Map>();
         Map<String,String> row1=null;
 //        Map<String,String> row1 = new HashMap<String, String>();
@@ -47,9 +53,23 @@ public class Amazonurl implements PageProcessor {
                 if (pageHref.toString() != null && !pageNumSet.contains(pageText.toString())) {
 
                     pageNumSet.add(pageText.toString());
+                    String pageStr=pageHref.toString();
+                    Pattern pattern = Pattern.compile("sr_pg_(\\d*)");
+                    // 忽略大小写的写法
+                    // Pattern pat = Pattern.compile(regEx, Pattern.CASE_INSENSITIVE);
+                    Matcher matcher = pattern.matcher(pageStr);
+                    // 查找字符串中是否有匹配正则表达式的字符/字符串
+                    boolean rs = matcher.find();
+
+                    if (rs){
+                        String num=matcher.group(1);
+                        if(Integer.parseInt(num)<=pagescrape){
+                            page.addTargetRequest(pageHref.toString());
+                        }
+
+                    }
 
 
-                    page.addTargetRequest(pageHref.toString());
 
 //                   System.out.println("pageHref"+pageHref.toString());
 //                    System.out.println("pageText"+pageText.toString());
@@ -109,6 +129,7 @@ public class Amazonurl implements PageProcessor {
              }
              rows.add(row1);
          }
+        System.out.println("完成关键词的一页"+keyWord);
         page.putField("result",rows);
 
 

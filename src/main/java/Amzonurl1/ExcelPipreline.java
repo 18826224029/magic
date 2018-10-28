@@ -71,7 +71,7 @@ public class ExcelPipreline implements Pipeline{
 //            public static void main(String[] args) {
 
         try {
-            writeExcel(rows, 5, "./AmazonResult.xlsx");
+            writeExcel(rows, 5, "./AmazonResult_"+resultItems.get("keyword")+".xlsx");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -86,10 +86,10 @@ public class ExcelPipreline implements Pipeline{
 //            excelFiled.c
 //        }
 
-
-        HSSFWorkbook wb = new HSSFWorkbook();
-
-        HSSFSheet sheet = wb.createSheet("Amazon数据2");  //创建table工作薄
+//
+//        HSSFWorkbook wb = new HSSFWorkbook();
+//
+//        HSSFSheet sheet = wb.createSheet("Amazon数据2");  //创建table工作薄
         for (int j = 0; j < dataList.size(); j++) {
             // 创建一行：从第二行开始，跳过属性列
 //            HSSFRow row = sheet.createRow(j + 1);
